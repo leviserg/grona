@@ -1,0 +1,113 @@
+{
+  "name": "Frich 2",
+  "sensors": [
+    {
+      "sensid": 1,
+      "sensname": "Питание",
+      "sensval": 0,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 20:35:00",
+      "lastper": 3600
+    },
+    {
+      "sensid": 2,
+      "sensname": "Готовность",
+      "sensval": 0,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 19:35:00",
+      "lastper": 7200
+    },
+    {
+      "sensid": 3,
+      "sensname": "Запущено",
+      "sensval": 1,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 18:35:00",
+      "lastper": 10800
+    },
+    {
+      "sensid": 4,
+      "sensname": "Авария",
+      "sensval": 1,
+      "sensalm": 1,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 17:35:00",
+      "lastper": 14400
+    },
+    {
+      "sensid": 5,
+      "sensname": "В ремонте",
+      "sensval": 0,
+      "sensalm": 0,
+      "sensmaint": 1,
+      "lastupd": "2020-07-01 16:35:00",
+      "lastper": 18000
+    },
+    {
+      "sensid": 6,
+      "sensname": "Наличие продукта",
+      "sensval": 1,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 15:35:00",
+      "lastper": 21600
+    },
+    {
+      "sensid": 7,
+      "sensname": "Конвеер 1",
+      "sensval": 0,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 14:35:00",
+      "lastper": 25200
+    },
+    {
+      "sensid": 8,
+      "sensname": "Конвеер 2",
+      "sensval": 0,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 13:35:00",
+      "lastper": 28800
+    },
+    {
+      "sensid": 9,
+      "sensname": "Механизм 3",
+      "sensval": 0,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 12:35:00",
+      "lastper": 32400
+    },
+    {
+      "sensid": 10,
+      "sensname": "Готовность приема",
+      "sensval": 1,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 11:35:00",
+      "lastper": 36000
+    },
+    {
+      "sensid": 11,
+      "sensname": "Подача включена",
+      "sensval": 0,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 10:35:00",
+      "lastper": 39600
+    },
+    {
+      "sensid": 12,
+      "sensname": "Механизм 4",
+      "sensval": 1,
+      "sensalm": 0,
+      "sensmaint": 0,
+      "lastupd": "2020-07-01 09:35:00",
+      "lastper": 43200
+    }
+  ]
+}

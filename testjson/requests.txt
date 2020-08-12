@@ -1,0 +1,12 @@
+http://main/testjson/gronahomecur.php  											=> homecur.json
+http://main/testjson/gronahomeprev.php?seldate=2020-06-18%2017%3A30%3A28 		=> homeprev.json  (2020-06-18 17:30:28)
+http://main/testjson/gronalinecur.php?id=1 										=> linecur.json
+http://main/testjson/gronalineprev.php?id=1&seldate=2020-07-01%221%3A35%3A00	=> lineprev.json  (2020-07-01 21:35:00)
+http://main/testjson/gronacalcrep.php?id=1&mode=1								=> getcalcoee.json (mode=0 - shift, 1-daily, 2-week, 3- month)
+http://main/testjson/gronamanrep.php?id=1&startdate=2020-08-04%2021%3A00%3A00&enddate=2020-08-05%2006%3A00%3A00 => => getcalcoee.json(startdate = 2020-08-04 21:00:00; enddate=2020-08-05 06:00:00)
+http://main/testjson/gronatrenddata.php?id=5									=> oeetrendline.json
+http://main/testjson/gronaactalarms.php?sum=1									=> 12 (count of faults)
+http://main/testjson/gronaactalarms.php											=> alarms.json
+http://main/testjson/gronaevents.php											=> events.json
+http://main/testjson/gronareports.php											=> reports.json
+http://main/testjson/gronareports.php?id=1										=> reports_line.json
