@@ -26,5 +26,11 @@
 		$pd.'logout' => [
 			'view' => 'logout'
 		],
+		$pd.'userhist' => [
+			'view' => 'userhist'
+		],
+		$pd.'trends' => [
+			'view' => 'trends'
+		],
 	];
 ?>

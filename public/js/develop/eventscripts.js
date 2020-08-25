@@ -13,30 +13,33 @@ function evntTableShow() {
     var oTable = $('#data-table').DataTable({
         processing: false, // true for on-line
         serverSide: false, // true for on-line
-        ajax: '../testjson/gronaevents.php',
+        ajax: '../app/core/AuxData.php/?events',
         columns: [
             { data: 'id', name: 'id' },                             // - 0
-            { data: 'appeared',
-                name: 'appeared',
+            { data: 'trigtime',
+                name: 'trigtime',
                 "render": function ( data, type, full, meta ) {
                     return moment(data).format('DD.MM.YYYY HH:mm:ss');
                 }
             },                                                      // - 1
-            { data: 'line', name: 'line' },                         // - 2
-            { data: 'descr', name: 'descr' },                       // - 3
-            { data: 'categ', name: 'categ' }                        // - 4
+            { data: 'linename', name: 'linename' },                 // - 2
+            { data: 'equipname', name: 'equipname' },                 // - 2  
+            { data: 'sensorname', name: 'sensorname' },                 // - 2           
+            { data: 'comment', name: 'comment' },                       // - 3
+            { data: 'category', name: 'category' },                   // - 4            
+            { data: 'category_id', name: 'category_id' }                        // - 4
         ],
         aoColumnDefs:[
             {
                 "searchable": false,
-                "aTargets": [0]
+                "aTargets": [0,6]
             },
             {
                 "visible": false,
-                "aTargets": [0]
+                "aTargets": [0,7]
             },
             {
-                targets: [0,4],
+                targets: [6],
                 className: 'dt-body-center'
             },
             {
@@ -47,7 +50,7 @@ function evntTableShow() {
         language: {
             search: "Поиск в описании : ",
             processing:     "Загружаю данные...",
-            lengthMenu:     "<b class='ml-3'>СОБЫТИЯ. </b>Отображать _MENU_ записей",
+            lengthMenu:     "<b class='mx-3'>СОБЫТИЯ. </b>Отображать _MENU_ записей",
             info:           "Отображается от _START_ до _END_ из _TOTAL_ записей",
             infoEmpty:      "Найдено от 0 до 0 из 0 записей",
             infoFiltered:   "(фильтр из _MAX_ записей всего)",
@@ -62,21 +65,16 @@ function evntTableShow() {
                 last:       "Конец"
             },
         },
-        "lengthMenu": [ 15, 30, 60, 120 ],
+        "lengthMenu": [ 20, 50, 100, 200 ],
         "createdRow": function ( row, data, index ) {
             var obj = data;
-            if ( obj.categ == "Авария") {
-                for(var i = 0; i < 5; i++){
+            if ( obj.category_id == 1) { // Alarm
+                for(var i = 0; i < 7; i++){
                     $('td', row).eq(i).addClass('text-danger font-weight-bold');                    
                 }
-            } else if ( obj.categ == "Предупреждение") {
-                for(var i = 0; i < 5; i++){
+            } else if ( obj.category_id == 2) { // Warning
+                for(var i = 0; i < 7; i++){
                     $('td', row).eq(i).addClass('text-warning font-weight-bold');                    
-                }
-            }
-            if ( obj.acknowledged != null ) {
-                for(var i = 0; i < 5; i++){
-                    $('td', row).eq(i).removeClass('font-weight-bold');                    
                 }
             }
         },

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grona OEE</title>
     <!-- Styles -->
-    <link href="public/css/app.css" rel="stylesheet">
+    <!-- <link href="public/css/app.css" rel="stylesheet"> -->
     <link href="public/css/datatable.css" rel="stylesheet">
     <link href="public/css/sort.css" rel="stylesheet">
     <link href="public/css/bootstrap.css" rel="stylesheet">
@@ -36,24 +36,42 @@
                 <li class="nav-item">
                     <a class="nav-link mx-2 px-2" href="events" data-toggle="tooltip" title="События"><i class="fa fa-list mx-2"></i>События</a>
                 </li>
+                <?php if (isset($_SESSION['user']) && $_SESSION['user']['line']==0): ?>
+                    <li class="nav-item">
+                        <a class="nav-link mx-2 px-2" href="userhist" data-toggle="tooltip" title="История входа пользователей"><i class="fa fa-address-book mx-2"></i>Статистика</a>
+                    </li>
+                <?php endif; ?>
+                <li class="nav-item">
+                    <a class="nav-link mx-2 px-2" href="trends" data-toggle="tooltip" title="Графики"><i class="fa fa-bar-chart mx-2"></i>Графики</a>
+                </li> 
                 <li class="nav-item">
                     <a class="nav-link mx-2 px-2" href="reports" data-toggle="tooltip" title="Отчеты"><i class="fa fa-file-text mx-2"></i>Отчеты</a>
-                </li>
+                </li>              
+            </ul>
+
+            <ul class="navbar-nav ml-auto mr-auto">
+                <li class="nav-item">
+                    <a class="text-white font-weight-bold" id="lineName"></a>
+                </li> 
             </ul>
             <ul class="navbar-nav ml-auto">
-                <?php if (!isset($_SESSION['admin']) || strlen($_SESSION['admin'])==0): ?>
+                <?php if (!isset($_SESSION['user']) || count($_SESSION['user'])==0): ?>
                     <li class="nav-item">
-                        <a class="nav-link mr-2" id="loginbtn" data-toggle="tooltip" title="System Login" href="login">Вход</a>
+                        <a class="nav-link mr-2" href="login" id="loginbtn" data-toggle="tooltip" title="Вход в систему">Вход</a>
                     </li>
                     <p id="session" style="display:none">0</p>
                 <?php else: ?>
                     <li class="nav-item">
-                        <span class="nav-link">Вы: <?php echo $_SESSION['admin']?></span>
+                        <span class="nav-link">Вы: <?php echo $_SESSION['user']['login']?></span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="logoutnbtn" data-toggle="tooltip" title="System Logout" href="logout">Выход</a>
+                        <a class="nav-link" href="logout" id="logoutnbtn" data-toggle="tooltip" title="Выйти из системы">Выход</a>
                     </li>
-                    <p id="session" style="display:none">1</p>
+                    <span id="userline" style="display:none"><?php echo $_SESSION['user']['line']?></span>
+                    <span id="useradm" style="display:none"><?php echo $_SESSION['user']['adm']?></span>
+                    <span id="userrecid" style="display:none"><?php echo $_SESSION['user']['rec_id']?></span>
+                    <span id="userid" style="display:none"><?php echo $_SESSION['user']['id']?></span>
+                    <span id="usereditrep" style="display:none"><?php echo $_SESSION['user']['editreport']?></span>
                 <?php endif; ?>
                 <li class="nav-item active">
                     <span class="nav-link" id="curtime"></span>
@@ -61,7 +79,7 @@
             </ul>
         </div>
     </nav>
-    <div class="container-fluid" style="width:97%">
+    <div class="container-fluid" style="width:98%">
 
         <script src="public/js/source/jquery.js"></script>
         <script src="public/js/source/jquery.xdomainrequest.min.js"></script>
@@ -78,7 +96,7 @@
         <script src="public/amcharts/amstock.js"></script>
         <script src="public/amcharts/export.js"></script>
         <?php
-            if (!isset($_SESSION['admin']) || strlen($_SESSION['admin'])==0)
+            if (!isset($_SESSION['user']) || count($_SESSION['user'])==0)
                 require "app/views/login.php";
             else
                 echo $content;

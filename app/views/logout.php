@@ -1,24 +1,14 @@
-<?php unset($_SESSION['admin']); ?>
-<br/>
-<div class="row mt-4 mr-auto ml-auto d-flex justify-content-center">
-		<div style="width:400px;">
-			<div class="card card-login">
-				<div class="card-header">Форма входа <small><i>( admin admin || user user )</i></small></div>
-				<div class="card-body">
-					<form action="app/core/Auth.php" method="post">
-						<div class="form-group">
-							<label for="name">Логин</label>
-							<input class="form-control text-center" type="text" name="login" id="name">
-						</div>
-						<div class="form-group">
-							<label for="pwd">Пароль</label>
-							<input class="form-control text-center" type="password" name="pwd" id="pwd">
-						</div>
-						<button type="submit" class="btn btn-primary btn-block">Войти</button>
-						<hr/>
-					</form>
-					<a class="btn btn-success btn-block" href="home">Назад</a>
-				</div>
-			</div>
-		</div>
-</div>
+<?php 
+    namespace app\core;
+	require 'app/core/Db.php';
+
+	if(isset($_SESSION['user']) && count($_SESSION['user'])!=0){
+		if(Db::logoutrecord($_SESSION['user']['rec_id'])){
+			unset($_SESSION['user']);
+		}
+		else{
+			die('Cannot update record');
+		}
+	}
+	echo require 'login.php';
+?>

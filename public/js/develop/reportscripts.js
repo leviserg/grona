@@ -1,7 +1,28 @@
 var updatePeriod = 3600;
 
 $(document).ready(function(){
+
     reportTableShow();
+
+    $("#savereport").bind("click",function(elem){
+        SaveReport(parseInt($("#reportid").text()));
+    });
+
+    $("#comment").bind("input propertychange",function(){
+        if(this.value.length > 50){
+            $("#comment").removeClass('bg-warning');
+            $("#comment").addClass('bg-danger');
+        }
+        else if(this.value.length >= 45){
+            $("#comment").removeClass('bg-danger');
+            $("#comment").addClass('bg-warning');
+        }
+        else if(this.value.length < 45){
+            $("#comment").removeClass('bg-danger');
+            $("#comment").removeClass('bg-warning');
+        }        
+    });
+
 });
 
 // *******************
@@ -9,54 +30,89 @@ $(document).ready(function(){
 // *******************
 
 function reportTableShow() {
+/*
+    $.ajax({
+        type:'GET',
+        url: '../app/core/AuxData.php/?reports',
+        //url: '../testjson/gronareports.php',
+        cache: false,
+        crossDomain: true,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function(data){
+            console.log(data);
+        },
+        error: function(err){
+            console.log(err);
+        }
+    });
+*/
 
     var oTable = $('#data-table').DataTable({
         processing: false, // true for on-line
         serverSide: false, // true for on-line
-        ajax: '../testjson/gronareports.php',
+        ajax: '../app/core/AuxData.php/?reports&userline='+$("#userline").text(),
         columns: [
-            { data: 'id', name: 'id' },                             // - 0
-            { data: 'created',                                      // - 1
-                name: 'created',
+            { data: 'id', name: 'id' },                                 // - 0
+            { data: 'linename', name: 'linename' },                     // - 1
+            { data: 'shiftstart',                                      // - 1
+                name: 'shiftstart',
                 "render": function ( data, type, full, meta ) {
                     return moment(data).format('DD.MM.YYYY HH:mm:ss');
                 }
             },
-            { data: 'line', name : 'line' },                        // - 2
-            { data: 'startdate',                                    // - 3
-                name: 'startdate',
+            { data: 'linestart',                                      // - 1
+                name: 'linestart',
                 "render": function ( data, type, full, meta ) {
                     return moment(data).format('DD.MM.YYYY HH:mm:ss');
                 }
             },
-            { data: 'stopdate',                                     // - 4
-                name: 'stopdate',
+            { data: 'linestop',                                      // - 1
+                name: 'linestop',
                 "render": function ( data, type, full, meta ) {
                     return moment(data).format('DD.MM.YYYY HH:mm:ss');
-                }            
+                }
             },
-            { data: 'delay',                                        // - 5
-                name: 'delay',
+            { data: 'shiftstop',                                      // - 1
+                name: 'shiftstop',
                 "render": function ( data, type, full, meta ) {
-                    //return moment(data).format('DD HH:mm:ss');
+                    return moment(data).format('DD.MM.YYYY HH:mm:ss');
+                }
+            },
+            { data: 'totaltimediff',                                      // - 1
+                name: 'totaltimediff',
+                "render": function ( data, type, full, meta ) {
                     return SecToTimeFmt(data);
                 }
             },
-            { data: 'type', name: 'type' },                         // - 6
+            { data: 'oee', name : 'oee' },                // - 6           
+            { data: 'stoptype', name : 'stoptype' },                // - 6
             { data: 'reason', name: 'reason' },                     // - 7
+            { data: 'comment', name: 'comment' },  
+            { data: 'login', name: 'login' },
+            { data: 'edited',                                      // - 1
+                name: 'edited',
+                "render": function ( data, type, full, meta ) {
+                    if(data)
+                        return moment(data).format('DD.MM.YYYY HH:mm:ss');
+                    else
+                        return '-';
+                }
+            },
             { 
                 data : {
                     'edited':'edited',
-                    'id':'id'
+                    'id':'id',
+                    'line_id':'line_id'
                 },
                 name : 'id',
                 'render': function(data, type, row, meta){
                     if(type === 'display'){
-                        if(data.edited == 0){
-                            data = '<button type="submit" class="btn btn-xs btn-info edit my-0 pb-1 pt-0" style="width:90%" data-id="'+data.id+'" id="'+data.id+'"><small>Править</small></button>';
+                        if(data.edited == null){
+                            data = '<button type="submit" class="btn btn-xs btn-info edit my-0 px-0 py-0" style="width:90%; font-size: 1.0em;" data-id="'+data.line_id+'" id="'+data.id+'">Править</button>';
                         }
                         else{
-                            data = '<button class="btn btn-xs btn-secondary disabled my-0 pb-1 pt-0" style="width:90%" disabled><small>Завершено<small></button>';
+                            data = '<button class="btn btn-xs btn-secondary disabled my-0 px-0 py-0" style="width:90%; font-size: 0.85em;" disabled>Завершен</button>';
                         }
                     }
                     return data;
@@ -66,19 +122,19 @@ function reportTableShow() {
         aoColumnDefs:[
             {
                 "searchable": false,
-                "aTargets": [0]
+                "aTargets": [0, 2,3,4,5,6,7,12,13]
             },
             {
-                "visible": false,
-                "aTargets": [0]
+                //"visible": false,
+                //"aTargets": [0]
             },
             {
-                targets: [0,5,6],
+                targets: [0,2,3,4,5,6,7,11,12],
                 className: 'dt-body-center'
             },
             {
-                targets: [7],
-                className: 'small'
+                targets: [10],
+                className: 'text-truncate'
             },
             {
                 targets: [1],
@@ -88,7 +144,7 @@ function reportTableShow() {
         language: {
             search: "Поиск в описании : ",
             processing:     "Загружаю данные...",
-            lengthMenu:     "<b class='ml-3'>ОТЧЕТЫ. </b>Отображать _MENU_ записей",
+            lengthMenu:     "<b class='text-info mx-3'>ОТЧЕТЫ. </b>Отображать _MENU_ записей",
             info:           "Отображается от _START_ до _END_ из _TOTAL_ записей",
             infoEmpty:      "Найдено от 0 до 0 из 0 записей",
             infoFiltered:   "(фильтр из _MAX_ записей всего)",
@@ -103,21 +159,12 @@ function reportTableShow() {
                 last:       "Конец"
             },
         },
-        "lengthMenu": [ 12, 20, 50, 200 ],
+        "lengthMenu": [ 20, 50, 100, 200 ],
         "createdRow": function ( row, data, index ) {
             var obj = data;
-            if ( obj.categ == "Авария") {
-                for(var i = 0; i < 5; i++){
-                    $('td', row).eq(i).addClass('text-danger font-weight-bold');                    
-                }
-            } else if ( obj.categ == "Предупреждение") {
-                for(var i = 0; i < 5; i++){
-                    $('td', row).eq(i).addClass('text-warning font-weight-bold');                    
-                }
-            }
-            if ( obj.acknowledged != null ) {
-                for(var i = 0; i < 5; i++){
-                    $('td', row).eq(i).removeClass('font-weight-bold');                    
+            if ( obj.stoptype == "Авария") {
+                for(var i = 0; i < 10; i++){
+                    $('td', row).eq(i).addClass('text-danger');                    
                 }
             }
         },
@@ -133,35 +180,119 @@ function reportTableShow() {
     }, updatePeriod*1000 );
 
 }
-
+// ************
 function editReport(elem){
-    swal("Извините,\nя сейчас в разработке :)", "Здесь будет форма для правки причины останова...", "success");
     $target = $(elem.target);
-    const id = $target.attr('data-id');
+    var id = parseInt($target.attr('id'));
+    var line_id = parseInt($target.attr('data-id'));
+    var userline = parseInt($('#userline').text());
+    var usereditrep = parseInt($('#usereditrep').text());
+
     if(id){
-        swal("Правка", "Извините \n я сейчас в разработке :)\nЗдесь будет форма для правки\nпричины останова по отчету id=" + id, "success");
-        /*
-        $.ajax({
-            type:'POST',
-            url:'../avtostella/alarms/ack/' + id + '?_token={{ csrf_token() }}',
-            cache: false,
-            crossDomain: true,
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'xml',
-            success: function(){
-                swal("Квитирование события...", "Нажмите ОК для продолжения", "success")
-                .then(function(value){
-                    oTable.ajax.reload( null, false );
-                    getActUnackCount();
-                });
-            },
-            error: function(err){
-                console.log(err);
-            }
-        });
-        */
+        if((userline==0 && usereditrep==0) || (userline!=0 && userline!=line_id))
+            swal("Правка", "Ограничение доступа.\nЗаполнение формы отчета id=" + id + " для линии " + line_id + "\nпредоставлено ответственному персоналу.", "warning");
+        else{
+            showFormReport(id);
+        }
     }
     else{
         swal("Не могу открыть форму правки", "Попробуйте еще раз.", "warning");
+    }
+}
+// ************
+
+function showFormReport(recordid){
+    $.ajax({
+        type:'GET',
+        url: '../app/core/AuxData.php/?reportid=' + recordid,
+        cache: false,
+        crossDomain: true,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function(data){
+            RecordStopType = data.data.record[0].stop_id;
+            RecordLine = data.data.record[0].linename;
+            RecordStopTime = moment(data.data.record[0].shiftstop).format('DD.MM.YYYY HH:mm:ss');
+            FaultReasons = data.data.types.faultreasons;
+            StopTypes = data.data.types.stoptypes;
+            fillReportForm(RecordStopType, StopTypes, FaultReasons);
+            $("#reportid").text(recordid);
+            $("#linename").text("Линия : " + RecordLine);
+            $("#stoptime").text("Время останова : " + RecordStopTime);
+            $('#showreportform').modal("show");
+        },
+        error: function(err){
+            console.log(err);
+        }
+    });
+}
+// ************
+function fillReportForm(recordStopType, StopTypes, FaultReasons){
+    $("select[name='reason']").empty();
+    $("select[name='stoptype']").empty();
+    for(var id in StopTypes){
+        var sAppend = "<option value='"+StopTypes[id].id +"'>" + StopTypes[id].name  + "</option>";
+        if(StopTypes[id].id == recordStopType)
+            sAppend = "<option value='"+StopTypes[id].id +"' selected='selected'>" + StopTypes[id].name  + "</option>";
+        $("select[name='stoptype']").append($(sAppend));
+    }
+
+    if(recordStopType==1)
+        $("select[name='stoptype']").prop('disabled', 'disabled');
+    else
+        $("select[name='stoptype']").prop('disabled', '');
+
+    for(var id in FaultReasons){
+        var sAppend = "<option value='"+FaultReasons[id].id +"'>" + FaultReasons[id].name  + "</option>";
+        if(recordStopType==1 && id==1)
+            sAppend = "<option value='"+FaultReasons[id].id +"' selected='selected'>" + FaultReasons[id].name  + "</option>";
+        $("select[name='reason']").append($(sAppend));
+    }
+}
+
+function SaveReport(savedreportid){
+    if($('textarea#comment').val().length <= 50 && $('textarea#comment').val().length > 5){
+        var sMessage = "Тип останова : " + $("select[name='stoptype'] option:selected").text();
+        sMessage += "\nПричина останова: " + $("select[name='reason'] option:selected").text();
+        sMessage += "\nКомментарий : ";
+        sMessage += "\n" + $("#comment").val();
+        sMessage += "\nВерно?";
+        swal("Проверка данных.", sMessage ,{
+            buttons: ["Нет", "Да"],
+            icon: "success",
+        })
+        .then(function(result){
+            if (result) {
+                $.ajax({
+                    type: 'GET',
+                    url: '../app/core/AuxData.php',
+                    cache: false,
+                    data: { 
+                        savedreportid : savedreportid,
+                        stoptype : $("select[name='stoptype']").val(),
+                        faultreason : $("select[name='reason']").val(),
+                        comment : $('textarea#comment').val(),
+                        userid : $("#userid").text()
+                    },
+                    crossDomain: true,
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function(data){
+                        swal("Сохранено", "Ваш отчет успешно сохранен", "success").
+                        then(function(res){
+                            window.location.reload();
+                        })
+                    },
+                    error: function(err){
+                        console.log(err);
+                        swal("Ошибка", "Не могу сохранить отчет", "error");
+                    }
+                });
+                $('#showreportform').modal("hide");
+            }
+        });
+    }
+    else{
+        swal('Ошибка', 'Заполните правильно поле "Комментарий"\n(не меньше 5 символов и не больше 50)', 'warning');
     }
 }

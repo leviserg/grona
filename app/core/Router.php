@@ -48,7 +48,7 @@
 				if (file_exists($viewpath)) {
 					$view = new View($this->params);
 					$wr = '';
-					if(isset($_SESSION['admin']) && strlen($_SESSION['admin'])==0){
+					if(isset($_SESSION['user']) && count($_SESSION['user'])==0){
 						$wr = 'Неверный логин и пароль';
 					}
 					$vars = [
